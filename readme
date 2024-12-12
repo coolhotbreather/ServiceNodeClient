@@ -1,0 +1,114 @@
+# Node.js Service with PostgreSQL and Google Pub/Sub
+
+This project is a Node.js service designed to manage two entities: **Orders** and **Clients**. The service provides a REST API for CRUD operations and integrates with PostgreSQL for data storage and Google Pub/Sub for messaging. It is containerized using Docker and can be deployed on Kubernetes (Minikube or similar environments).
+
+## Features
+
+- **REST API** for managing `Orders` and `Clients`.
+- **PostgreSQL** for data storage.
+- **Google Pub/Sub** integration for message-based communication.
+- **Idempotency** for processing messages to avoid duplicate actions.
+- **Automated tests** using Jest for both unit and integration testing.
+- **Kubernetes deployment** and Docker containerization.
+- **Database migrations** and seeding.
+
+## Prerequisites
+
+Before running this project, you need to have the following tools installed:
+
+- Node.js (v14 or later)
+- Docker
+- Kubernetes (Minikube or any other Kubernetes environment)
+- Google Cloud account (for Pub/Sub integration)
+- PostgreSQL (configured in the project or use Docker)
+
+## Installation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/yourusername/nodejs-service.git
+cd nodejs-service
+2. Install dependencies
+npm install
+3. Set up the database
+To set up the PostgreSQL database, use the following script:
+
+npm run setup-db
+This will run the database migrations and set up the schema for Orders and Clients.
+
+4. Import initial data
+If you have a JSON file with initial data, you can import it into the database using:
+
+npm run import-data
+5. Set up Google Pub/Sub
+Create a Google Cloud project.
+Enable the Pub/Sub API.
+Create a topic and a subscription.
+Add the necessary credentials (API keys) in the secret.yaml file and apply them to Kubernetes.
+6. Run the application locally
+You can run the application locally using Docker:
+
+✅docker-compose up
+This will start the application in a container and expose it on port 3000.
+
+Kubernetes Deployment
+
+Apply the Kubernetes configuration files:
+kubectl apply -f k8s/
+Check the deployment status:
+kubectl get pods
+Access the service through the LoadBalancer or NodePort (based on your configuration in service.yaml).
+Access the API
+Once the application is running, you can access the following endpoints:
+
+GET /orders - Retrieve a list of orders.
+POST /orders - Create a new order.
+GET /orders/:id - Retrieve a specific order by ID.
+PUT /orders/:id - Update an order.
+DELETE /orders/:id - Delete an order.
+GET /clients - Retrieve a list of clients.
+POST /clients - Create a new client.
+GET /clients/:id - Retrieve a specific client by ID.
+PUT /clients/:id - Update a client.
+DELETE /clients/:id - Delete a client.
+Testing
+
+You can run unit and integration tests using Jest:
+
+npm run test
+This will run the tests and show the results.
+
+Docker
+
+To build the Docker image for the project:
+
+docker build -t nodejs-service .
+To run the application in Docker:
+
+docker run -p 3000:3000 nodejs-service
+Configuration
+
+The application configuration is stored in ConfigMap (for environment variables) and Secrets (for sensitive data). These are applied in the Kubernetes configuration files.
+
+ConfigMap (configmap.yaml)
+You can modify the configmap.yaml file to change environment variables such as NODE_ENV, DATABASE_URL, and PUBSUB_TOPIC.
+
+Secrets (secret.yaml)
+For sensitive data such as database passwords and API keys, the secrets are stored in the secret.yaml file. Make sure these are kept secure.
+
+License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+
+### Ключові моменти опису:
+1. **Основні можливості**: Розповідає про функціональність проекту (API, PostgreSQL, Google Pub/Sub, Docker, Kubernetes тощо).
+2. **Встановлення та налаштування**: Покрокова інструкція щодо клону репозиторію, встановлення залежностей, налаштування бази даних і запуску.
+3. **Kubernetes**: Опис налаштування та деплойменту проекту в Kubernetes.
+4. **API доступ**: Перелік доступних ендпоінтів API для роботи з сутностями `Orders` та `Clients`.
+5. **Тестування**: Інструкція для запуску тестів за допомогою Jest.
+6. **Docker**: Як створити Docker-образ і запустити додаток у Docker.
+7. **Конфігурація**: Опис ConfigMap і Secrets для налаштування змінних середовища та конфіденційних даних.
+
+Цей файл може слугувати повним посібником для налаштування та використання вашого проекту.

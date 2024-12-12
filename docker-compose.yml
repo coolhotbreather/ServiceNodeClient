@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+  # Сервис для Node.js приложения
+  app:
+    build:
+      context: .
+    image: music-service:latest
+    container_name: music-service
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_HOST=postgres
+      - DATABASE_USER=music_user
+      - DATABASE_PASSWORD=password
+      - DATABASE_NAME=music_db
+      - RABBITMQ_HOST=rabbitmq
+    depends_on:
+      - postgres
+      - rabbitmq
+    networks:
+      - music-network
+    volumes:
+      - .:/app
+    command: ["npm", "run", "start"]
+
+  # Сервис для PostgreSQL
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=music_user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=music_db
+    ports:
+      - "5432:5432"
+    networks:
+      - music-network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Сервис для RabbitMQ
+  rabbitmq:
+    image: "rabbitmq:management"
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    ports:
+      - "5672:5672"   # Порт для RabbitMQ
+      - "15672:15672" # Веб-интерфейс RabbitMQ
+    networks:
+      - music-network
+
+networks:
+  music-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
